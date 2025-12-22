@@ -3,12 +3,11 @@ const CONSTANTS = require("../common/constants/constants");
 
 exports.create = async (createBlockedMemberssDto, result = {}) => {
   try {
-    const { isBlocked, groupId, channelId, blockedId } =
-      createBlockedMemberssDto;
+    const { isBlocked, groupId, blockedId } = createBlockedMemberssDto;
 
     const data = {
-      groupId: groupId || null,
-      channelId: channelId || null,
+      groupId,
+
       blockedId,
     };
 

@@ -51,7 +51,7 @@ const groupsSchema = new mongoose.Schema(
       },
     ],
 
-    isSuperChannel: {
+    isSuperGroup: {
       type: Boolean,
       default: false,
     },

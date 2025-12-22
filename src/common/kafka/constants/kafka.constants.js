@@ -18,20 +18,5 @@ module.exports = {
     UPDATE_GROUP_MESSAGE_STATUS: "UpdateGroupMessageStatusV1",
     DELETE_MULTIPLE_GROUP_MESSAGES: "DeleteMultipleGroupMessagesV1",
     UNDO_DELETE_MULTIPLE_GROUP_MESSAGES: "UndoDeleteMultipleGroupMessagesV1",
-
-    PIN_CHANNEL_MESSAGE: "PinChannelMessageV1",
-    REACT_CHANNEL_MESSAGE: "ReactChannelMessageV1",
-    CREATE_CHANNEL_MESSAGE: "CreateChannelMessageV1",
-    UPDATE_CHANNEL_MESSAGE: "UpdateChannelMessageV1",
-    DELETE_CHANNEL_MESSAGE: "DeleteChannelMessageV1",
-    UPDATE_CHANNEL_MESSAGE_STATUS: "UpdateChannelMessageStatusV1",
-    DELETE_MULTIPLE_CHANNEL_MESSAGES: "DeleteMultipleChannelMessagesV1",
-    UNDO_DELETE_MULTIPLE_CHANNEL_MESSAGES:
-      "UndoDeleteMultipleChannelMessagesV1",
-
-    REACT_CHANNEL_COMMENT: "ReactChannelCommentV1",
-    CREATE_CHANNEL_COMMENT: "CreateChannelCommentV1",
-    UPDATE_CHANNEL_COMMENT: "UpdateChannelCommentV1",
-    DELETE_CHANNEL_COMMENT: "DeleteChannelCommentV1",
   },
 };

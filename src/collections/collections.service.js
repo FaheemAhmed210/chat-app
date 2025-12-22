@@ -218,67 +218,6 @@ exports.listCollections = async (listCollectionsDto, result = {}) => {
                 },
               },
             ],
-            channelMessage: [
-              { $match: { type: "channels" } },
-              {
-                $lookup: {
-                  from: "channel-messages",
-                  let: {
-                    channelId: "$collectionId",
-                    clearedBy: "$clearedMessageId",
-                    userId: userObjectId,
-                  },
-                  pipeline: [
-                    {
-                      $match: {
-                        $expr: {
-                          $and: [
-                            { $eq: ["$channelId", "$$channelId"] },
-                            {
-                              $not: {
-                                $in: [
-                                  userObjectId,
-                                  { $ifNull: ["$deletedFor", []] },
-                                ],
-                              },
-                            },
-                            { $eq: ["$isDeletedForEveryone", false] },
-                            {
-                              $or: [
-                                { $not: ["$$clearedBy"] }, // not cleared
-                                { $gt: ["$_id", "$$clearedBy"] }, // cleared → only newer
-                              ],
-                            },
-                            {
-                              $or: [
-                                { $ne: ["$content.type", "request"] }, // not a request → always allow
-                                {
-                                  $and: [
-                                    { $eq: ["$content.type", "request"] },
-                                    {
-                                      $in: [
-                                        userObjectId,
-                                        [
-                                          "$content.metaData.sender",
-                                          "$content.metaData.reciver",
-                                        ],
-                                      ],
-                                    },
-                                  ],
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      },
-                    },
-                    { $sort: { createdAt: -1 } },
-                    { $limit: 1 },
-                  ],
-                  as: "lastMessage",
-                },
-              },
-            ],
           },
         },
 
@@ -286,11 +225,7 @@ exports.listCollections = async (listCollectionsDto, result = {}) => {
         {
           $project: {
             combined: {
-              $concatArrays: [
-                "$chatMessage",
-                "$groupMessage",
-                "$channelMessage",
-              ],
+              $concatArrays: ["$chatMessage", "$groupMessage"],
             },
           },
         },

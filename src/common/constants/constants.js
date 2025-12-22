@@ -30,6 +30,5 @@ module.exports = {
   SOCKET_EVENTS: {
     CHAT_MESSAGE: "chat_message",
     GROUP_CHAT_MESSAGE: "group_chat_message",
-    CHANNEL_CHAT_MESSAGE: "channel_chat_message",
   },
 };

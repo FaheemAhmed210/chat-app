@@ -129,41 +129,6 @@ const handleMessages = (io, socket) => () => {
       });
     }
   });
-
-  socket.on("channel_typing", async (payload) => {
-    try {
-      const { channelId, typing, userName } = payload;
-
-      socket
-        .to(channelId.toString())
-        .emit("channel_typing", { channelId, typing, userName });
-    } catch (err) {
-      console.error(err);
-      socket.emit("error", {
-        status: EVENT_STATUSES.SERVER_ERR,
-        message: "Something went wrong",
-        event: "join_room_network:sent",
-        details: null,
-      });
-    }
-  });
-  socket.on("channel_recording", async (payload) => {
-    try {
-      const { channelId, recording, userName } = payload;
-
-      socket
-        .to(channelId.toString())
-        .emit("channel_recording", { channelId, recording, userName });
-    } catch (err) {
-      console.error(err);
-      socket.emit("error", {
-        status: EVENT_STATUSES.SERVER_ERR,
-        message: "Something went wrong",
-        event: "join_room_network:sent",
-        details: null,
-      });
-    }
-  });
 };
 
 module.exports = (io, socket) => {

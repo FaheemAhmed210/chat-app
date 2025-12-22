@@ -146,7 +146,7 @@ exports.findByIdAndUpdate = async (userId, updatesDto, result = {}) => {
 
 exports.findAndCount = async (findAndCountsDto, result = {}) => {
   try {
-    const { offset, limit, userId, search, channelId, groupId, isBlocked } =
+    const { offset, limit, userId, search, groupId, isBlocked } =
       findAndCountsDto;
 
     const blocked = Boolean(isBlocked ?? false);
@@ -195,23 +195,6 @@ exports.findAndCount = async (findAndCountsDto, result = {}) => {
       pipeline.push({ $match: { isBlocked: true } });
     } else if (blocked === false) {
       pipeline.push({ $match: { isBlocked: false } });
-    }
-
-    if (channelId) {
-      const channelObjId =
-        mongoose.Types.ObjectId.createFromHexString(channelId);
-      pipeline.push(
-        {
-          $lookup: {
-            from: "channel-participants", // collection name in Mongo
-            localField: "_id",
-            foreignField: "userId",
-            as: "participant",
-            pipeline: [{ $match: { channelId: channelObjId } }],
-          },
-        },
-        { $match: { participant: { $size: 0 } } }
-      );
     }
 
     if (groupId) {
@@ -642,7 +625,7 @@ exports.searchUsers = async (searchUsersDto, result = {}) => {
               $match: {
                 name: { $regex: search, $options: "i" },
                 groupsType: { $ne: GROUP_TYPES.PRIVATE },
-                isSuperChannel: false,
+                isSuperGroup: false,
               },
             },
             // lookup comments for count

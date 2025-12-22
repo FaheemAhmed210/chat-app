@@ -492,12 +492,12 @@ exports.checkAdminRole = ({
         if (participant.isBlocked && !participant.permissions.changeInfo)
           throw createError(
             StatusCodes.FORBIDDEN,
-            "Forbidden, not allowed to change channel info"
+            "Forbidden, not allowed to change group info"
           );
         if (changeInfo && !participant.permissions.changeInfo)
           throw createError(
             StatusCodes.FORBIDDEN,
-            "Forbidden, not allowed to change channel info"
+            "Forbidden, not allowed to change group info"
           );
         if (postMessage && !participant.permissions.postMessage)
           throw createError(

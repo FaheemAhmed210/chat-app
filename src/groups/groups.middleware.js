@@ -193,10 +193,7 @@ exports.checkAdminRole = ({
       if (result.ex) throw result.ex;
 
       if (result.participantNotFound)
-        throw createError(
-          StatusCodes.NOT_FOUND,
-          "User not a member of channel"
-        );
+        throw createError(StatusCodes.NOT_FOUND, "User not a member of group");
 
       const participant = result.data;
 
@@ -206,7 +203,7 @@ exports.checkAdminRole = ({
         if (changeInfo && !participant.permissions.changeInfo)
           throw createError(
             StatusCodes.FORBIDDEN,
-            "Forbidden, not allowed to change channel info"
+            "Forbidden, not allowed to change group info"
           );
         if (postMessage && !participant.permissions.postMessage)
           throw createError(

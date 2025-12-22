@@ -588,7 +588,7 @@ exports.getFcmTokens = async (getFcmTokenssDto, result = {}) => {
     const { senderId, groupId } = getFcmTokenssDto;
     const now = new Date();
 
-    const channels = await GroupParticipants.aggregate([
+    const groups = await GroupParticipants.aggregate([
       {
         $match: {
           groupId: toObjectId(groupId),
@@ -678,7 +678,7 @@ exports.getFcmTokens = async (getFcmTokenssDto, result = {}) => {
       },
     ]);
 
-    result.data = channels;
+    result.data = groups;
   } catch (ex) {
     result.ex = ex;
   } finally {

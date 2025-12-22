@@ -66,10 +66,10 @@ exports.checkParticipantRole = ({ mustBeMember, mustBeAdmin } = {}) => {
       const user = result?.data;
 
       if (mustBeMember !== undefined && mustBeMember && !user)
-        throw createError(StatusCodes.NOT_FOUND, "User not in channel");
+        throw createError(StatusCodes.NOT_FOUND, "User not in group");
 
       if (mustBeMember !== undefined && !mustBeMember && user)
-        throw createError(StatusCodes.NOT_FOUND, "User already in channel");
+        throw createError(StatusCodes.NOT_FOUND, "User already in group");
 
       if (mustBeAdmin !== undefined && mustBeAdmin && !user?.isAdmin)
         throw createError(StatusCodes.NOT_FOUND, "User is not an Admin");
@@ -218,7 +218,7 @@ exports.checkAdminRole = ({
         if (changeInfo && !participant.permissions.changeInfo)
           throw createError(
             StatusCodes.FORBIDDEN,
-            "Forbidden, not allowed to change channel info"
+            "Forbidden, not allowed to change group info"
           );
         if (postMessage && !participant.permissions.postMessage)
           throw createError(
