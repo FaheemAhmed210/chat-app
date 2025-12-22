@@ -1,0 +1,15 @@
+.vscode/
+node_modules/
+
+secrets/
+
+.env
+.env.development
+.prettierignore
+nodemon.json
+*.http
+sendEth.js
+configs/privateKeys.json
+removeUsers.js
+getdata.js
+centrifugo/config.json

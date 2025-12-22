@@ -1,0 +1,9 @@
+exports.SERVER_ENVIRONMENTS = {
+  PRODUCTION: "production",
+  DEVELOPMENT: "development",
+};
+
+exports.JWT_TOKEN_TYPES = {
+  ACCESS_TOKEN: "ACCESS_TOKEN",
+  REFRESH_TOKEN: "REFRESH_TOKEN",
+};
