@@ -18,27 +18,14 @@ verifyToken = (token, secret) => {
   });
 };
 
-exports.signToken = (user, type) => {
+signToken = ({ user, secret, expiry, payload }) => {
   return new Promise((resolve, reject) => {
-    const secret =
-      type === JWT_TOKEN_TYPES.ACCESS_TOKEN
-        ? configs.jwt.accessToken.secret
-        : configs.jwt.refreshToken.secret;
-    let expiry;
-
-    expiry =
-      type === JWT_TOKEN_TYPES.ACCESS_TOKEN
-        ? configs.jwt.accessToken.ttl
-        : configs.jwt.refreshToken.ttl;
-
     const options = {
       expiresIn: expiry,
       issuer: configs.jwt.issuer,
       audience: user.id.toString(),
       subject: user.id.toString(),
     };
-
-    const payload = type === JWT_TOKEN_TYPES.ACCESS_TOKEN ? user : {};
 
     jwt.sign(payload, secret, options, (err, token) => {
       if (err) {
@@ -49,6 +36,28 @@ exports.signToken = (user, type) => {
       resolve(token);
     });
   });
+};
+
+exports.signTokens = async (user) => {
+  try {
+    const [accessToken, refreshToken] = await Promise.all([
+      signToken({
+        user,
+        secret: configs.jwt.accessToken.secret,
+        expiry: configs.jwt.accessToken.ttl,
+        payload: user,
+      }),
+      signToken({
+        user,
+        secret: configs.jwt.refreshToken.secret,
+        expiry: configs.jwt.refreshToken.ttl,
+        payload: {},
+      }),
+    ]);
+    return { accessToken, refreshToken };
+  } catch (ex) {
+    console.log(ex);
+  }
 };
 
 exports.verifyAccessToken = async (req, res, next) => {

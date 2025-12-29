@@ -1,15 +1,7 @@
 const mongoose = require("mongoose");
 const CONSTANTS = require("../common/constants/constants");
-async function generateReferralCode() {
-  const referralCodes = await import("referral-codes");
-  return referralCodes.generate({
-    length: 10,
-    count: 1,
-    charset: referralCodes.charset("alphanumeric"),
-  })[0];
-}
 const { defaultUserImage } = require("../../configs");
-
+const bcrypt = require("bcryptjs");
 const usersSchema = new mongoose.Schema(
   {
     userName: {
@@ -17,40 +9,44 @@ const usersSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       lowercase: true,
-      sparse: true,
+      required: true,
     },
 
     displayName: {
       type: String,
       unique: true,
       trim: true,
-      sparse: true,
-    },
-    walletAddress: {
-      type: String,
-      trim: true,
-      unique: true,
-      lowercase: true,
-      sparse: true,
+      required: true,
     },
 
-    btcWalletAddress: {
+    email: {
       type: String,
-      trim: true,
       unique: true,
       sparse: true,
+      trim: true,
+      required: true,
     },
-    solanaWalletAddress: {
+    password: {
       type: String,
       trim: true,
-      unique: true,
-      sparse: true,
+      required: true,
+      // select: false,
     },
-    tronWalletAddress: {
+
+    passwordResetToken: {
       type: String,
       trim: true,
       unique: true,
       sparse: true,
+      select: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      select: false,
     },
 
     role: {
@@ -64,80 +60,51 @@ const usersSchema = new mongoose.Schema(
       default: defaultUserImage,
     },
 
-    udid: {
-      type: String,
-      trim: true,
-    },
-
-    referalCode: {
-      type: String,
-      unique: true,
-      trim: true,
-    },
-
     isBlocked: {
       type: Boolean,
       default: false,
     },
 
-    waitingList: {
-      type: Boolean,
-      default: true,
-    },
-
-    level: {
-      type: Number,
-      enum: CONSTANTS.REFFERAL_LEVELS,
-      default: CONSTANTS.REFFERAL_LEVELS.ZERO,
-    },
-
-    referralTree: {
-      level1: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      }, // Direct referrer
-      level2: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      }, // Referrer of the referrer
-      level3: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-      }, // 3rd level upline
-    },
-
-    fcmToken: {
-      type: String,
-      trim: true,
-    },
-    platformName: {
-      type: String,
-      trim: true,
-    },
-
-    deviceModel: {
-      type: String,
-      trim: true,
-    },
-    osVersion: {
-      type: String,
-      trim: true,
-    },
-    version: {
-      type: String,
-      trim: true,
-    },
     lastSeen: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+        delete ret.passwordResetToken;
+        delete ret.deletedAt;
+        return ret;
+      },
+    },
+    toObject: {
+      transform(doc, ret) {
+        delete ret.password;
+        delete ret.passwordResetToken;
+        delete ret.deletedAt;
+        return ret;
+      },
+    },
+  }
 );
 
-// pre-save hook to set referral code if not set
+usersSchema.methods.softDelete = function () {
+  this.deletedAt = new Date();
+  this.isDeleted = true;
+  return this.save();
+};
+
 usersSchema.pre("save", async function (next) {
-  if (!this.referalCode) {
-    this.referalCode = await generateReferralCode();
-  }
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
+usersSchema.methods.isPasswordValid = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
+
+usersSchema.methods.isResetTokenValid = function (token) {
+  return token === this.passwordResetToken;
+};
 module.exports = mongoose.model("users", usersSchema);

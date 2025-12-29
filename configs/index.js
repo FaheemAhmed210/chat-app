@@ -2,6 +2,13 @@ module.exports = {
   database: {
     uri: process.env.DATABASE_URI,
   },
+  passwordPolicy: {
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumeric: 1,
+    minSpecialChars: 1,
+    minLength: 8,
+  },
   jwt: {
     accessToken: {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET,
