@@ -1,3 +1,4 @@
+const { StatusCodes } = require("http-status-codes");
 const authService = require("./auth.service.js");
 const {
   handleServiceResult,
@@ -9,10 +10,10 @@ exports.signup = async (req, res, next) => {
 
     const result = await authService.signup(signupDto);
 
-    const { statusCode, data } = handleServiceResult(result);
+    const data = handleServiceResult(result);
 
-    return res.status(statusCode).json({
-      statusCode,
+    return res.status(StatusCodes.CREATED).json({
+      statusCode: StatusCodes.CREATED,
       message: "Signup Successful",
       data,
     });
@@ -27,10 +28,10 @@ exports.signin = async (req, res, next) => {
 
     const result = await authService.signin(signInDto);
 
-    const { statusCode, data } = handleServiceResult(result);
+    const data = handleServiceResult(result);
 
-    return res.status(statusCode).json({
-      statusCode,
+    return res.status(StatusCodes.OK).json({
+      statusCode: StatusCodes.OK,
       message: "Signin Successful",
       data,
     });
@@ -45,10 +46,10 @@ exports.refreshToken = async (req, res, next) => {
 
     const result = await authService.refreshToken(refreshTokenDto);
 
-    const { statusCode, data } = handleServiceResult(result);
+    const data = handleServiceResult(result);
 
-    return res.status(statusCode).json({
-      statusCode,
+    return res.status(StatusCodes.OK).json({
+      statusCode: StatusCodes.OK,
       messages: "Access Token creation successful",
       data,
     });
@@ -64,10 +65,10 @@ exports.logout = async (req, res, next) => {
     };
     const result = await authService.logout(logoutDto);
 
-    const { statusCode, data } = handleServiceResult(result);
+    const data = handleServiceResult(result);
 
-    return res.status(statusCode).json({
-      statusCode,
+    return res.status(StatusCodes.OK).json({
+      statusCode: StatusCodes.OK,
       messages: "Logout Successful",
       data,
     });
@@ -83,10 +84,10 @@ exports.forgetPassword = async (req, res, next) => {
     };
     const result = await authService.forgetPassword(forgetPasswordDto);
 
-    const { statusCode, data } = handleServiceResult(result);
+    const data = handleServiceResult(result);
 
-    return res.status(statusCode).json({
-      statusCode,
+    return res.status(StatusCodes.OK).json({
+      statusCode: StatusCodes.OK,
       message: "Password reset link sent via email",
     });
   } catch (ex) {
@@ -103,10 +104,10 @@ exports.resetPassword = async (req, res, next) => {
       password,
     };
     const result = await authService.resetPassword(resetPasswordDto);
-    const { statusCode, data } = handleServiceResult(result);
+    const data = handleServiceResult(result);
 
-    return res.status(statusCode).json({
-      statusCode,
+    return res.status(StatusCodes.OK).json({
+      statusCode: StatusCodes.OK,
       message: "Your Password has been successfuly changed.",
     });
   } catch (ex) {

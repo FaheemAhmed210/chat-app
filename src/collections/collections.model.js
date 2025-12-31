@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const {
   COLLECTION_TYPES,
-  PARTICIPANT_TYPES,
+
   MUTE_DURATION,
   MESSAGE_TYPES,
 } = require("./constants/collections.constants");
@@ -40,13 +40,7 @@ const collectionsSchema = new mongoose.Schema(
     },
     participantId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: "participantType",
-      default: null,
-    },
-    participantType: {
-      type: String,
-      enum: PARTICIPANT_TYPES,
-      default: PARTICIPANT_TYPES.NULL,
+      ref: "group-participants",
     },
 
     isMuted: {

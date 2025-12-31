@@ -3,10 +3,7 @@ module.exports = {
     CHATS: "chats",
     GROUPS: "groups",
   },
-  PARTICIPANT_TYPES: {
-    NULL: null,
-    GROUP_PARTICIPANTS: "group-participants",
-  },
+
   MESSAGE_TYPES: {
     NULL: null,
     CHAT_MESSAGE: "chat-messages",
